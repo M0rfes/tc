@@ -6,7 +6,7 @@ import "@fontsource/roboto/700.css";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Index from "./pages/Index";
-import BoardPage from "./pages/board";
+import BoardPage from "./pages/Board";
 
 const router = createBrowserRouter([
   {

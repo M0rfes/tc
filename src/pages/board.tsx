@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { Box } from "@mui/material";
 import { BoardHeader } from "../components/BoardHeader";
+import { Board } from "../components/Board";
 
 const BoardPage: FC = () => {
   return (
@@ -10,6 +11,7 @@ const BoardPage: FC = () => {
       }}
     >
       <BoardHeader />
+      <Board />
     </Box>
   );
 };
