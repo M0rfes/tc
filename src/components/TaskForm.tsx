@@ -2,7 +2,7 @@ import { Box, Button, Modal, TextField, Typography } from "@mui/material";
 import { FC } from "react";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import z from "zod";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 type TaskFormProps = {
   open: boolean;

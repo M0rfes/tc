@@ -1,7 +1,7 @@
 import { Box, Button, Card, CardContent, CardHeader } from "@mui/material";
 import { FC, useState } from "react";
 import { useParams } from "react-router";
-import { Task, useAppStore } from "../store";
+import { useAppStore } from "../store";
 import { TaskForm } from "./TaskForm";
 
 export const Board: FC = () => {

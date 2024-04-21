@@ -3,7 +3,6 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { TaskForm } from "./TaskForm";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
 describe("TaskForm Component", () => {
   let open = true;

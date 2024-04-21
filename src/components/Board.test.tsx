@@ -1,5 +1,4 @@
-import { act } from "react-dom/test-utils";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { useAppStore } from "../store";
 import { useParams } from "react-router";
 import { Board } from "./Board";
