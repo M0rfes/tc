@@ -1,13 +1,16 @@
 import { FC } from "react";
-import { useParams } from "react-router";
+import { Box } from "@mui/material";
+import { BoardHeader } from "../components/BoardHeader";
 
 const BoardPage: FC = () => {
-  const props = useParams();
-  console.log(props);
   return (
-    <div>
-      <h1>Board Page</h1>
-    </div>
+    <Box
+      sx={{
+        margin: 1,
+      }}
+    >
+      <BoardHeader />
+    </Box>
   );
 };
 
