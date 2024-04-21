@@ -35,6 +35,15 @@ const sortTaskAlphabetically = (tasks: Task[]) => {
   return tasks.sort((a, b) => a.title.localeCompare(b.title));
 };
 
+export const sortTask = (column: [string, Task[]]) => {
+  const favoriteTasks = column[1].filter((task) => task.isFavorite);
+  const otherTasks = column[1].filter((task) => !task.isFavorite);
+  return [
+    ...sortTaskAlphabetically(favoriteTasks),
+    ...sortTaskAlphabetically(otherTasks),
+  ];
+};
+
 export const useAppStore = create<AppStore>((set) => ({
   boards: [],
   addBoard: (board) =>
@@ -89,12 +98,7 @@ export const useAppStore = create<AppStore>((set) => ({
     set((state) => {
       const boards = [...state.boards];
       const column = boards[boardIndex].columns[columnIndex];
-      const favoriteTasks = column[1].filter((task) => task.isFavorite);
-      const otherTasks = column[1].filter((task) => !task.isFavorite);
-      const sortedTasks = [
-        ...sortTaskAlphabetically(favoriteTasks),
-        ...sortTaskAlphabetically(otherTasks),
-      ];
+      const sortedTasks = sortTask(column);
       boards[boardIndex].columns[columnIndex][1] = sortedTasks;
       return { boards };
     });

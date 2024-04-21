@@ -2,6 +2,9 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import { useAppStore } from "../store";
 import { useParams } from "react-router";
 import { Board } from "./Board";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+import { addDays } from "date-fns";
 jest.mock("../store", () => ({
   useAppStore: jest.fn(),
 }));
@@ -12,7 +15,26 @@ jest.mock("react-router", () => ({
 describe("BoardHeader Component", () => {
   const deleteTask = jest.fn();
   const favoriteTask = jest.fn();
-
+  const editTask = jest.fn();
+  const sortTasks = jest.fn();
+  const tasks = [
+    {
+      title: "ccc",
+      description: "description1",
+      deadline: addDays(new Date(), 1),
+      isFavorite: true,
+    },
+    {
+      title: "bbb",
+      description: "description2",
+      deadline: addDays(new Date(), 1),
+    },
+    {
+      title: "aaa",
+      description: "description3",
+      deadline: addDays(new Date(), 1),
+    },
+  ];
   beforeEach(() => {
     (useParams as unknown as jest.Mock).mockReturnValue({ id: "1" });
     (useAppStore as unknown as jest.Mock).mockReturnValue({
@@ -21,23 +43,7 @@ describe("BoardHeader Component", () => {
           title: "Board 1",
           description: "Description 1",
           columns: [
-            [
-              "col1",
-              [
-                {
-                  title: "task1",
-                  description: "description1",
-                },
-                {
-                  title: "task2",
-                  description: "description2",
-                },
-                {
-                  title: "task3",
-                  description: "description3",
-                },
-              ],
-            ],
+            ["col1", tasks],
             ["col2", []],
             ["col3", []],
           ],
@@ -45,8 +51,14 @@ describe("BoardHeader Component", () => {
       ],
       deleteTask,
       favoriteTask,
+      editTask,
+      sortTasks,
     });
-    render(<Board />);
+    render(
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <Board />
+      </LocalizationProvider>
+    );
   });
   afterEach(() => {
     jest.clearAllMocks();
@@ -108,5 +120,30 @@ describe("BoardHeader Component", () => {
       fireEvent.click(buttonElement);
     });
     expect(favoriteTask).toHaveBeenCalledWith(0, 0, 0);
+  });
+
+  test("calls edit task when edit task button is clicked", async () => {
+    const buttonElement = screen.getAllByTestId("edit-task")[0];
+    await act(() => {
+      fireEvent.click(buttonElement);
+    });
+    const submitButtonElement = screen.getByTestId("submit-button");
+    expect(submitButtonElement).toBeEnabled();
+    await act(() => {
+      fireEvent.click(submitButtonElement);
+    });
+    expect(editTask).toHaveBeenCalledWith(0, 0, 0, {
+      title: "task1",
+      description: "description1",
+      deadline: tasks[0].deadline,
+    });
+  });
+
+  test("calls sort tasks when sort button is clicked", async () => {
+    const buttonElement = screen.getAllByTestId("sort-task")[0];
+    await act(() => {
+      fireEvent.click(buttonElement);
+    });
+    expect(sortTasks).toHaveBeenCalledWith(0, 0);
   });
 });

@@ -71,7 +71,10 @@ export const Board: FC = () => {
                       >
                         <AddIcon />
                       </IconButton>
-                      <IconButton onClick={() => sortTasks(index, colIndex)}>
+                      <IconButton
+                        data-testid="sort-task"
+                        onClick={() => sortTasks(index, colIndex)}
+                      >
                         <SortByAlphaIcon />
                       </IconButton>
                     </Box>
@@ -89,6 +92,7 @@ export const Board: FC = () => {
                         data-testid="task"
                       >
                         <ListItemButton
+                          data-testid="edit-task"
                           onClick={(e) => {
                             e.stopPropagation();
                             setTask([colIndex, taskIndex, task]);
