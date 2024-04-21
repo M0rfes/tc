@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -12,7 +11,7 @@ import {
 } from "@mui/material";
 import { FC, useState } from "react";
 import { useParams } from "react-router";
-import { useAppStore } from "../store";
+import { Task, useAppStore } from "../store";
 import { TaskForm } from "./TaskForm";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -20,9 +19,10 @@ import AddIcon from "@mui/icons-material/Add";
 export const Board: FC = () => {
   const props = useParams<{ id: string }>();
   const index = parseInt(props.id!) - 1;
-  const { boards, addTask, deleteTask, favoriteTask } = useAppStore();
+  const { boards, addTask, deleteTask, favoriteTask, editTask } = useAppStore();
   const board = boards[index];
   const [selectedColumn, setSelectedColumn] = useState<number | null>(null);
+  const [task, setTask] = useState<[number, number, Task] | null>(null);
   return (
     <>
       <Box
@@ -81,24 +81,35 @@ export const Board: FC = () => {
                         }}
                         data-testid="task"
                       >
-                        <ListItemButton>
+                        <ListItemButton
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setTask([colIndex, taskIndex, task]);
+                          }}
+                        >
                           <ListItemText
                             primary={task.title}
                             secondary={task.description}
                           />
                           <IconButton
                             data-testid="fav-task"
-                            onClick={() =>
-                              favoriteTask(index, colIndex, taskIndex)
-                            }
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              favoriteTask(index, colIndex, taskIndex);
+                            }}
                           >
-                            <FavoriteIcon />
+                            <FavoriteIcon
+                              sx={{
+                                color: task.isFavorite ? "red" : "inherit",
+                              }}
+                            />
                           </IconButton>
                           <IconButton
                             data-testid="delete-task"
-                            onClick={() =>
-                              deleteTask(index, colIndex, taskIndex)
-                            }
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteTask(index, colIndex, taskIndex);
+                            }}
                           >
                             <DeleteIcon />
                           </IconButton>
@@ -114,10 +125,19 @@ export const Board: FC = () => {
       </Box>
       <TaskForm
         open={Number.isInteger(selectedColumn)}
-        onClose={() => setSelectedColumn(null)}
-        onSubmit={(task) => {
-          addTask(index, selectedColumn!, task);
+        task={task?.[2] ?? null}
+        onClose={() => {
           setSelectedColumn(null);
+          setTask(null);
+        }}
+        onSubmit={(t) => {
+          if (task) {
+            editTask(index, task[0], task[1], t);
+          } else {
+            addTask(index, selectedColumn!, t);
+          }
+          setSelectedColumn(null);
+          setTask(null);
         }}
       />
     </>

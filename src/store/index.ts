@@ -21,6 +21,12 @@ export interface AppStore {
     columnIndex: number,
     taskIndex: number
   ) => void;
+  editTask: (
+    boardIndex: number,
+    columnIndex: number,
+    taskIndex: number,
+    task: Task
+  ) => void;
   reset: () => void;
 }
 
@@ -62,6 +68,15 @@ export const useAppStore = create<AppStore>((set) => ({
       const boards = [...state.boards];
       boards[boardIndex].columns[columnIndex][1][taskIndex].isFavorite =
         !boards[boardIndex].columns[columnIndex][1][taskIndex].isFavorite;
+      return { boards };
+    });
+  },
+  editTask: (boardIndex, columnIndex, taskIndex, task) => {
+    set((state) => {
+      const boards = [...state.boards];
+      boards[boardIndex].columns[columnIndex][1] = boards[boardIndex].columns[
+        columnIndex
+      ][1].map((t, index) => (index === taskIndex ? { ...task } : t));
       return { boards };
     });
   },

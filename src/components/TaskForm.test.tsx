@@ -12,7 +12,12 @@ describe("TaskForm Component", () => {
   beforeEach(() => {
     render(
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <TaskForm open={open} onClose={onClose} onSubmit={onSubmit} />
+        <TaskForm
+          open={open}
+          onClose={onClose}
+          onSubmit={onSubmit}
+          task={null}
+        />
       </LocalizationProvider>
     );
   });

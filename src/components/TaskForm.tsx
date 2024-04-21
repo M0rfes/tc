@@ -4,6 +4,7 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Task } from "../store";
 type TaskFormProps = {
   open: boolean;
   onClose: () => void;
@@ -12,6 +13,7 @@ type TaskFormProps = {
     description: string;
     deadline: Date;
   }) => void;
+  task: Task | null;
 };
 
 const schema = z.object({
@@ -22,7 +24,12 @@ const schema = z.object({
   }),
 });
 
-export const TaskForm: FC<TaskFormProps> = ({ open, onClose, onSubmit }) => {
+export const TaskForm: FC<TaskFormProps> = ({
+  open,
+  onClose,
+  onSubmit,
+  task,
+}) => {
   const {
     register,
     handleSubmit,
@@ -33,10 +40,15 @@ export const TaskForm: FC<TaskFormProps> = ({ open, onClose, onSubmit }) => {
   } = useForm({
     resolver: zodResolver(schema),
     mode: "onBlur",
+    values: {
+      title: task?.title || "",
+      description: task?.description || "",
+      deadline: task?.deadline || null,
+    },
   });
 
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal open={open || !!task} onClose={onClose}>
       <Box
         sx={{
           position: "absolute" as "absolute",
@@ -111,12 +123,12 @@ export const TaskForm: FC<TaskFormProps> = ({ open, onClose, onSubmit }) => {
               message: error,
             });
           }}
-          value={getValues("dueDate")}
+          value={getValues("deadline")}
           data-testid="due-date"
         />
-        {errors.dueDate && (
+        {errors.deadline && (
           <Typography color="error">
-            {errors.dueDate.message?.toString()}
+            {errors.deadline.message?.toString()}
           </Typography>
         )}
 
