@@ -37,6 +37,7 @@ export const TaskForm: FC<TaskFormProps> = ({
     setValue,
     getValues,
     setError,
+    reset,
   } = useForm({
     resolver: zodResolver(schema),
     mode: "onBlur",
@@ -48,7 +49,13 @@ export const TaskForm: FC<TaskFormProps> = ({
   });
 
   return (
-    <Modal open={open || !!task} onClose={onClose}>
+    <Modal
+      open={open || !!task}
+      onClose={() => {
+        onClose();
+        reset();
+      }}
+    >
       <Box
         sx={{
           position: "absolute" as "absolute",
@@ -66,6 +73,7 @@ export const TaskForm: FC<TaskFormProps> = ({
         component="form"
         onSubmit={handleSubmit((data: any) => {
           onSubmit(data);
+          reset();
         })}
       >
         <Typography variant="h6" data-testid="title">

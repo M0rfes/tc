@@ -27,8 +27,13 @@ export interface AppStore {
     taskIndex: number,
     task: Task
   ) => void;
+  sortTasks: (boardIndex: number, columnIndex: number) => void;
   reset: () => void;
 }
+
+const sortTaskAlphabetically = (tasks: Task[]) => {
+  return tasks.sort((a, b) => a.title.localeCompare(b.title));
+};
 
 export const useAppStore = create<AppStore>((set) => ({
   boards: [],
@@ -77,6 +82,20 @@ export const useAppStore = create<AppStore>((set) => ({
       boards[boardIndex].columns[columnIndex][1] = boards[boardIndex].columns[
         columnIndex
       ][1].map((t, index) => (index === taskIndex ? { ...task } : t));
+      return { boards };
+    });
+  },
+  sortTasks: (boardIndex, columnIndex) => {
+    set((state) => {
+      const boards = [...state.boards];
+      const column = boards[boardIndex].columns[columnIndex];
+      const favoriteTasks = column[1].filter((task) => task.isFavorite);
+      const otherTasks = column[1].filter((task) => !task.isFavorite);
+      const sortedTasks = [
+        ...sortTaskAlphabetically(favoriteTasks),
+        ...sortTaskAlphabetically(otherTasks),
+      ];
+      boards[boardIndex].columns[columnIndex][1] = sortedTasks;
       return { boards };
     });
   },

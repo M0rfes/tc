@@ -16,10 +16,12 @@ import { TaskForm } from "./TaskForm";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import AddIcon from "@mui/icons-material/Add";
+import SortByAlphaIcon from "@mui/icons-material/SortByAlpha";
 export const Board: FC = () => {
   const props = useParams<{ id: string }>();
   const index = parseInt(props.id!) - 1;
-  const { boards, addTask, deleteTask, favoriteTask, editTask } = useAppStore();
+  const { boards, addTask, deleteTask, favoriteTask, editTask, sortTasks } =
+    useAppStore();
   const board = boards[index];
   const [selectedColumn, setSelectedColumn] = useState<number | null>(null);
   const [task, setTask] = useState<[number, number, Task] | null>(null);
@@ -62,12 +64,17 @@ export const Board: FC = () => {
                 <CardHeader
                   title={column[0]}
                   action={
-                    <IconButton
-                      data-testid="add-task"
-                      onClick={() => setSelectedColumn(colIndex)}
-                    >
-                      <AddIcon />
-                    </IconButton>
+                    <Box sx={{ display: "flex", gap: 1 }}>
+                      <IconButton
+                        data-testid="add-task"
+                        onClick={() => setSelectedColumn(colIndex)}
+                      >
+                        <AddIcon />
+                      </IconButton>
+                      <IconButton onClick={() => sortTasks(index, colIndex)}>
+                        <SortByAlphaIcon />
+                      </IconButton>
+                    </Box>
                   }
                 />
                 <CardContent>
