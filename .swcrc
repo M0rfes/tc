@@ -1,0 +1,16 @@
+// .swcrc
+{
+  "jsc": {
+    "target": "es2020",
+    "parser": {
+      "syntax": "typescript", // Use "ecmascript" if not using TypeScript
+      "tsx": true, // Allow parsing JSX
+      "decorators": false
+    },
+    "transform": {
+      "react": {
+        "runtime": "automatic" // Required for React 17+
+      }
+    }
+  }
+}
