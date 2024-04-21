@@ -5,17 +5,12 @@ import {
   CardHeader,
   IconButton,
   List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
 } from "@mui/material";
 import { FC } from "react";
-import DeleteIcon from "@mui/icons-material/Delete";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import AddIcon from "@mui/icons-material/Add";
 import SortByAlphaIcon from "@mui/icons-material/SortByAlpha";
 import { Task, useAppStore } from "../store";
-import { useDrag, useDrop } from "react-dnd";
+import { useDrop } from "react-dnd";
 import { Task as TaskComponent } from "./Task";
 
 type ColumnProps = {

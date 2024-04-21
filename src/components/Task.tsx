@@ -7,10 +7,8 @@ import {
 import { FC } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import AddIcon from "@mui/icons-material/Add";
-import SortByAlphaIcon from "@mui/icons-material/SortByAlpha";
 import { Task as TaskType, useAppStore } from "../store";
-import { useDrag, useDrop } from "react-dnd";
+import { useDrag } from "react-dnd";
 
 type TaskProps = {
   task: TaskType;
