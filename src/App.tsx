@@ -5,6 +5,8 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import Index from "./pages/Index";
 import BoardPage from "./pages/Board";
 
@@ -21,9 +23,9 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
       <RouterProvider router={router} />
-    </>
+    </LocalizationProvider>
   );
 }
 
