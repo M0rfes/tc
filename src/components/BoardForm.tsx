@@ -1,9 +1,31 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { FC, useState } from "react";
+import { FC } from "react";
+import z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const schema = z.object({
+  title: z.string().min(3),
+  description: z.string().min(10),
+});
 
 export const BoardForm: FC = () => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm({
+    resolver: zodResolver(schema),
+    mode: "onBlur",
+    values: {
+      title: null,
+      description: null,
+    },
+  });
+  const onSubmit = (data: any) => {
+    console.log(data);
+    handleSubmit(data);
+  };
   return (
     <Box
       sx={{
@@ -13,31 +35,45 @@ export const BoardForm: FC = () => {
         flexDirection: "column",
         gap: 2,
       }}
+      component="form"
+      onSubmit={handleSubmit(onSubmit)}
     >
-      <Typography
-        variant="h6"
-        data-testid="title
-      "
-      >
+      <Typography variant="h6" data-testid="title">
         Create New Board
       </Typography>
       <TextField
         label="Title"
         variant="outlined"
         fullWidth
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        {...register("title", { required: true })}
+        error={!!errors.title}
+        helperText={errors.title?.message?.toString()}
+        inputProps={{
+          "data-testid": "title-input",
+        }}
       />
+
       <TextField
         label="Description"
         variant="outlined"
         multiline
         rows={4} // This makes it a text area with a height of 4 lines
         fullWidth
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
+        {...register("description", { required: true })}
+        error={!!errors.description}
+        helperText={errors.description?.message?.toString()}
+        inputProps={{
+          "data-testid": "description-textarea",
+        }}
       />
-      <Button variant="contained" color="primary" fullWidth>
+
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        fullWidth
+        disabled={!isValid}
+      >
         Create New Board
       </Button>
     </Box>
