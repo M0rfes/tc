@@ -1,6 +1,7 @@
 import { Divider, List, ListItem, ListItemText } from "@mui/material";
 import { FC, Fragment } from "react";
 import { useAppStore } from "../store";
+import { Link } from "react-router-dom";
 
 export const BoardList: FC = () => {
   const { boards } = useAppStore();
@@ -10,12 +11,12 @@ export const BoardList: FC = () => {
   return (
     <List>
       {boards.map((board, index) => (
-        <Fragment key={index}>
+        <Link key={index} to={`/board/${index}`}>
           <ListItem data-testid="list-item">
             <ListItemText primary={board.title} secondary={board.description} />
           </ListItem>
           <Divider />
-        </Fragment>
+        </Link>
       ))}
     </List>
   );

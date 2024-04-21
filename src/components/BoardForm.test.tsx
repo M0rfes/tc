@@ -1,10 +1,17 @@
 import { act } from "react-dom/test-utils";
 import { BoardForm } from "./BoardForm";
 import { render, screen, fireEvent } from "@testing-library/react";
+import { useAppStore } from "../store";
+jest.mock("../store", () => ({
+  useAppStore: jest.fn(),
+}));
 
 describe("BoardForm Component", () => {
   beforeEach(() => {
     render(<BoardForm />);
+  });
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   test("renders title", () => {
@@ -82,5 +89,33 @@ describe("BoardForm Component", () => {
       });
     });
     expect(buttonElement).toBeEnabled();
+  });
+
+  test("it adds new board to the store when the form is submitted", async () => {
+    const addBoard = jest.fn();
+    (useAppStore as unknown as jest.Mock).mockReturnValue({
+      addBoard,
+    });
+    const titleElement = screen.getByTestId("title-input");
+    const descriptionElement = screen.getByTestId("description-textarea");
+    const buttonElement = screen.getByRole("button", {
+      name: /create new board/i,
+    });
+    await act(() => {
+      fireEvent.change(titleElement, {
+        target: { value: "Hello World" },
+      });
+      fireEvent.change(descriptionElement, {
+        target: { value: "Hello World" },
+      });
+    });
+    expect(buttonElement).toBeEnabled();
+    await act(() => {
+      fireEvent.click(buttonElement);
+    });
+    expect(addBoard).toHaveBeenCalledWith({
+      title: "Hello World",
+      description: "Hello World",
+    });
   });
 });

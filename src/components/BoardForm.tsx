@@ -1,8 +1,9 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { FC } from "react";
 import z from "zod";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAppStore } from "../store";
 
 const schema = z.object({
   title: z.string().min(3),
@@ -10,6 +11,7 @@ const schema = z.object({
 });
 
 export const BoardForm: FC = () => {
+  const appStore = useAppStore();
   const {
     register,
     handleSubmit,
@@ -18,13 +20,15 @@ export const BoardForm: FC = () => {
     resolver: zodResolver(schema),
     mode: "onBlur",
     values: {
-      title: null,
-      description: null,
+      title: "",
+      description: "",
     },
   });
-  const onSubmit = (data: any) => {
-    console.log(data);
-    handleSubmit(data);
+  const onSubmit: SubmitHandler<{
+    title: string;
+    description: string;
+  }> = (data) => {
+    appStore.addBoard(data);
   };
   return (
     <Box
