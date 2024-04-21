@@ -4,6 +4,7 @@ import z from "zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAppStore } from "../store";
+import { useNavigate } from "react-router";
 
 const schema = z.object({
   title: z.string().min(3),
@@ -12,6 +13,7 @@ const schema = z.object({
 
 export const BoardForm: FC = () => {
   const appStore = useAppStore();
+  const navigation = useNavigate();
   const {
     register,
     handleSubmit,
@@ -29,6 +31,7 @@ export const BoardForm: FC = () => {
     description: string;
   }> = (data) => {
     appStore.addBoard(data);
+    navigation(`/board/${appStore.boards.length}`);
   };
   return (
     <Box

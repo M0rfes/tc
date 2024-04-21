@@ -2,8 +2,12 @@ import { act } from "react-dom/test-utils";
 import { BoardForm } from "./BoardForm";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { useAppStore } from "../store";
+import { useNavigate } from "react-router";
 jest.mock("../store", () => ({
   useAppStore: jest.fn(),
+}));
+jest.mock("react-router", () => ({
+  useNavigate: jest.fn(),
 }));
 
 describe("BoardForm Component", () => {
@@ -117,5 +121,43 @@ describe("BoardForm Component", () => {
       title: "Hello World",
       description: "Hello World",
     });
+  });
+
+  test("it navigates to the newly created board", async () => {
+    const addBoard = jest.fn();
+    const navigation = jest.fn();
+    (useAppStore as unknown as jest.Mock).mockReturnValue({
+      addBoard,
+      boards: [
+        {
+          title: "Hello World",
+          description: "Hello World",
+        },
+      ],
+    });
+    (useNavigate as unknown as jest.Mock).mockReturnValue(navigation);
+    const titleElement = screen.getByTestId("title-input");
+    const descriptionElement = screen.getByTestId("description-textarea");
+    const buttonElement = screen.getByRole("button", {
+      name: /create new board/i,
+    });
+    await act(() => {
+      fireEvent.change(titleElement, {
+        target: { value: "Hello World" },
+      });
+      fireEvent.change(descriptionElement, {
+        target: { value: "Hello World" },
+      });
+    });
+    expect(buttonElement).toBeEnabled();
+    await act(() => {
+      fireEvent.click(buttonElement);
+    });
+    expect(addBoard).toHaveBeenCalledWith({
+      title: "Hello World",
+      description: "Hello World",
+    });
+
+    expect(navigation).toHaveBeenCalledWith("/board/1");
   });
 });
