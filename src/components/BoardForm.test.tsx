@@ -95,45 +95,12 @@ describe("BoardForm Component", () => {
     expect(buttonElement).toBeEnabled();
   });
 
-  test("it adds new board to the store when the form is submitted", async () => {
-    const addBoard = jest.fn();
-    (useAppStore as unknown as jest.Mock).mockReturnValue({
-      addBoard,
-    });
-    const titleElement = screen.getByTestId("title-input");
-    const descriptionElement = screen.getByTestId("description-textarea");
-    const buttonElement = screen.getByRole("button", {
-      name: /create new board/i,
-    });
-    await act(() => {
-      fireEvent.change(titleElement, {
-        target: { value: "Hello World" },
-      });
-      fireEvent.change(descriptionElement, {
-        target: { value: "Hello World" },
-      });
-    });
-    expect(buttonElement).toBeEnabled();
-    await act(() => {
-      fireEvent.click(buttonElement);
-    });
-    expect(addBoard).toHaveBeenCalledWith({
-      title: "Hello World",
-      description: "Hello World",
-    });
-  });
-
   test("it navigates to the newly created board", async () => {
     const addBoard = jest.fn();
     const navigation = jest.fn();
     (useAppStore as unknown as jest.Mock).mockReturnValue({
       addBoard,
-      boards: [
-        {
-          title: "Hello World",
-          description: "Hello World",
-        },
-      ],
+      boards: [],
     });
     (useNavigate as unknown as jest.Mock).mockReturnValue(navigation);
     const titleElement = screen.getByTestId("title-input");

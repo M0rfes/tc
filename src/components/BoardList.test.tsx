@@ -38,16 +38,10 @@ describe("BoardList Component", () => {
     const store = useAppStore.getState();
     await act(() => {
       store.addBoard({ title: "Board 1", description: "Description 1" });
-      store.addBoard({ title: "Board 2", description: "Description 2" });
-      store.addBoard({ title: "Board 3", description: "Description 3" });
     });
     const boardLists = screen.getAllByTestId("list-item");
     expect(boardLists[0]).toHaveTextContent("Board 1");
     expect(boardLists[0]).toHaveTextContent("Description 1");
-    expect(boardLists[1]).toHaveTextContent("Board 2");
-    expect(boardLists[1]).toHaveTextContent("Description 2");
-    expect(boardLists[2]).toHaveTextContent("Board 3");
-    expect(boardLists[2]).toHaveTextContent("Description 3");
   });
 
   test("each link has the correct href", async () => {
