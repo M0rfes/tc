@@ -9,6 +9,7 @@ export interface AppStore {
   boards: { title: string; description: string; columns: [string, Task[]][] }[];
   addBoard: (board: { title: string; description: string }) => void;
   addColumn: (boardIndex: number, column: string) => void;
+  addTask: (boardIndex: number, columnIndex: number, task: Task) => void;
   reset: () => void;
 }
 
@@ -28,6 +29,13 @@ export const useAppStore = create<AppStore>((set) => ({
     set((state) => {
       const boards = [...state.boards];
       boards[boardIndex].columns.push([column, []]);
+      return { boards };
+    });
+  },
+  addTask: (boardIndex, columnIndex, task) => {
+    set((state) => {
+      const boards = [...state.boards];
+      boards[boardIndex].columns[columnIndex][1].push(task);
       return { boards };
     });
   },

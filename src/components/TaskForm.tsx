@@ -10,14 +10,14 @@ type TaskFormProps = {
   onSubmit: (props: {
     title: string;
     description: string;
-    dueDate: Date;
+    deadline: Date;
   }) => void;
 };
 
 const schema = z.object({
   title: z.string().min(3),
   description: z.string().min(10),
-  dueDate: z.date().refine((date) => date > new Date(), {
+  deadline: z.date().refine((date) => date > new Date(), {
     message: "Due date must be in the future",
   }),
 });
@@ -89,9 +89,9 @@ export const TaskForm: FC<TaskFormProps> = ({ open, onClose, onSubmit }) => {
           disablePast
           label="Due Date"
           onChange={(date) => {
-            const oldDate = getValues("dueDate");
+            const oldDate = getValues("deadline");
             if (!date && !oldDate) {
-              setError("dueDate", {
+              setError("deadline", {
                 type: "required",
                 message: "Due date is required",
               });
@@ -99,14 +99,14 @@ export const TaskForm: FC<TaskFormProps> = ({ open, onClose, onSubmit }) => {
             if (!date) {
               return;
             }
-            setValue("dueDate", date);
+            setValue("deadline", date);
           }}
           onError={(error) => {
             if (!error) {
-              setError("dueDate", {});
+              setError("deadline", {});
               return;
             }
-            setError("dueDate", {
+            setError("deadline", {
               type: "invalid",
               message: error,
             });

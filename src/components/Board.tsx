@@ -7,12 +7,10 @@ import { TaskForm } from "./TaskForm";
 export const Board: FC = () => {
   const props = useParams<{ id: string }>();
   const index = parseInt(props.id!) - 1;
-  const { boards } = useAppStore();
+  const { boards, addTask } = useAppStore();
   const board = boards[index];
-  const [selectedColumn, setSelectedColumn] = useState<[string, Task[]] | null>(
-    null
-  );
-
+  const [selectedColumn, setSelectedColumn] = useState<number | null>(null);
+  console.log(board.columns);
   return (
     <>
       <Box
@@ -54,7 +52,7 @@ export const Board: FC = () => {
                   action={
                     <Button
                       data-testid="add-task"
-                      onClick={() => setSelectedColumn(column)}
+                      onClick={() => setSelectedColumn(index)}
                     >
                       +
                     </Button>
@@ -67,9 +65,12 @@ export const Board: FC = () => {
         </Box>
       </Box>
       <TaskForm
-        open={!!selectedColumn}
+        open={Number.isInteger(selectedColumn)}
         onClose={() => setSelectedColumn(null)}
-        onSubmit={(task) => {}}
+        onSubmit={(task) => {
+          addTask(index, selectedColumn!, task);
+          setSelectedColumn(null);
+        }}
       />
     </>
   );
