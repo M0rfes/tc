@@ -28,6 +28,12 @@ export interface AppStore {
     task: Task
   ) => void;
   sortTasks: (boardIndex: number, columnIndex: number) => void;
+  moveTask: (
+    boardIndex: number,
+    from: number,
+    to: number,
+    taskIndex: number
+  ) => void;
   reset: () => void;
 }
 
@@ -100,6 +106,16 @@ export const useAppStore = create<AppStore>((set) => ({
       const column = boards[boardIndex].columns[columnIndex];
       const sortedTasks = sortTask(column);
       boards[boardIndex].columns[columnIndex][1] = sortedTasks;
+      return { boards };
+    });
+  },
+  moveTask: (boardIndex, from, to, taskIndex) => {
+    set((state) => {
+      const boards = [...state.boards];
+      const board = boards[boardIndex];
+      const task = board.columns[from][1][taskIndex];
+      board.columns[from][1].splice(taskIndex, 1);
+      board.columns[to][1].push(task);
       return { boards };
     });
   },

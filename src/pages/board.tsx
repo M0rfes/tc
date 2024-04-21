@@ -1,5 +1,7 @@
 import { FC } from "react";
 import { Box } from "@mui/material";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { BoardHeader } from "../components/BoardHeader";
 import { Board } from "../components/Board";
 
@@ -11,7 +13,9 @@ const BoardPage: FC = () => {
       }}
     >
       <BoardHeader />
-      <Board />
+      <DndProvider backend={HTML5Backend}>
+        <Board />
+      </DndProvider>
     </Box>
   );
 };
